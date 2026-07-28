@@ -1,0 +1,69 @@
+pipeline {
+  agent any
+  environment{
+    NETWORK_NAME='tp-net'
+	DB_PASSWORD = '1234'
+	DB_CONTAINER = 'mariadb-server'
+	dockerhub_credential_id='credential_dockerhub_didierdefrance69'
+	docker_registry= 'https://registry.hub.docker.com'
+	docker_image_name='didierdefrance69/geodb:1'
+  }
+
+    stages {
+        //stage('from_git') {
+        //    steps {
+        //        git url : 'https://github.com/didier-tp/sql2026' , branch : 'main'
+        //        }
+        //}
+        stage('ls sql') {
+            steps {
+                sh 'ls *.sql'
+            }
+		}
+		stage('Start MariaDB Database Server in another container') {
+			agent any
+            steps {
+                sh 'docker network create $NETWORK_NAME || true'
+                sh 'docker rm -f $DB_CONTAINER || true'
+                sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:12.3'
+                sh '''
+                    for i in $(seq 1 18); do
+                        docker exec $DB_CONTAINER mariadb-admin ping -uroot -p$DB_PASSWORD --silent && break
+                        echo "En attente de MariaDB..."
+                        sleep 2
+                    done
+                '''
+		}
+	}
+	stage('init-db and insert and select') {
+	      agent {
+				docker {
+				image "mariadb:12.3"
+				args "--network $NETWORK_NAME"
+				}
+			}
+			steps {	
+			     sh 'mariadb --version'
+				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
+				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < insert-db.sql'
+				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
+			}
+		}
+	//stage('build_docker_image') {
+	//	steps {
+	//		script{
+	//			dockerImage = docker.build(docker_image_name)
+	//				}
+	//		}
+	//}
+	//stage('push_docker_image') {
+	//	steps {
+	//		script{
+	//			docker.withRegistry( docker_registry, dockerhub_credential_id ) {
+	//				dockerImage.push()
+	//			}
+	//		}
+	//	}
+	//}
+  }
+}

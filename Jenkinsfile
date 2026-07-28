@@ -49,21 +49,21 @@ pipeline {
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
 			}
 		}
-	//stage('build_docker_image') {
-	//	steps {
-	//		script{
-	//			dockerImage = docker.build(docker_image_name)
-	//				}
-	//		}
-	//}
-	//stage('push_docker_image') {
-	//	steps {
-	//		script{
-	//			docker.withRegistry( docker_registry, dockerhub_credential_id ) {
-	//				dockerImage.push()
-	//			}
-	//		}
-	//	}
-	//}
+	stage('build_docker_image') {
+		steps {
+			script{
+				dockerImage = docker.build(docker_image_name)
+					}
+			}
+	}
+	stage('push_docker_image') {
+		steps {
+			script{
+				docker.withRegistry( docker_registry, dockerhub_credential_id ) {
+					dockerImage.push()
+				}
+			}
+		}
+	}
   }
 }

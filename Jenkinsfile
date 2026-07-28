@@ -1,4 +1,5 @@
 pipeline {
+  agent any
   environment{
     NETWORK_NAME='tp-net'
 	DB_PASSWORD = '1234'
@@ -7,13 +8,7 @@ pipeline {
 	docker_registry= 'https://registry.hub.docker.com'
 	docker_image_name='didierdefrance69/geodb:1'
   }
-  //agent any
-    agent {
-        docker {
-            image "mariadb:12.3"
-			args "--network $NETWORK_NAME"
-        }
-    }
+
     stages {
         //stage('from_git') {
         //    steps {
@@ -41,6 +36,12 @@ pipeline {
 		}
 	}
 	stage('init db') {
+	      agent {
+				docker {
+				image "mariadb:12.3"
+				args "--network $NETWORK_NAME"
+				}
+			}
             steps {	
 			     sh 'mariadb --version'
 				 sh 'mariadb  h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'

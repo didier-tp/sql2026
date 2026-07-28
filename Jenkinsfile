@@ -38,6 +38,7 @@ pipeline {
 	stage('init db') {
 	      agent {
 				docker {
+				label "mariadb_client"
 				image "mariadb:12.3"
 				args "--network $NETWORK_NAME"
 				}
@@ -45,6 +46,15 @@ pipeline {
             steps {	
 			     sh 'mariadb --version'
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
+			}
+        }
+	stage('insert data') {
+	      agent {
+				label "mariadb_client"
+			}
+            steps {	
+			     sh 'mariadb --version'
+				 //sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
 			}
         }
 	//stage('build_docker_image') {

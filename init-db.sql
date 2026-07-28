@@ -1,4 +1,4 @@
-show database;
+show databases;
 #CREATE DATABASE geoDB IF NOT EXISTS;
 #CREATE TABLE departement(
 #	num integer auto_increment NOT NULL,

@@ -23,9 +23,9 @@ pipeline {
                 sh 'ls *.sql'
             }
 		}
-		stage('Start Database') {
+		stage('Start Database Server') {
 			steps {
-				sh 'systemctl start mysql || service mysql start'
+				sh 'service mariadb start'
 			}
 		}
 	stage('init db') {

@@ -26,7 +26,7 @@ pipeline {
                 sh 'docker network create $NETWORK_NAME || true'
                 sh 'docker rm -f $DB_CONTAINER || true'
                 sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:12.3'
-                sh 'sleep 30'
+                sh 'sleep 20'
 		}
 	}
 	stage('init-db and insert and select') {
@@ -53,8 +53,9 @@ pipeline {
 	stage('push_docker_image') {
 		steps {
 			script{
-				docker.withRegistry( docker_registry, dockerhub_credential_id ) {
-					dockerImage.push()
+			    sh 'echo publish image in dockerhub'
+				//docker.withRegistry( docker_registry, dockerhub_credential_id ) {
+					//dockerImage.push()
 				}
 			}
 		}

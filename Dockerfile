@@ -1,3 +1,2 @@
 FROM mariadb:12.3
-WORKDIR /script
-COPY . /script
+COPY *.sql /docker-entrypoint-initdb.d

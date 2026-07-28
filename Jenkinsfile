@@ -24,7 +24,7 @@ pipeline {
 	stage('init db') {
             steps {	
 			     //sh 'mariadb --version'
-				 sh 'mariadb -u root -p root <init-db.sql >out.txt 2>err.txt"
+				 sh 'mariadb -u root -p root <init-db.sql >out.txt 2>err.txt'
 			}
         }
 	//stage('build_docker_image') {

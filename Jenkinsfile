@@ -2,8 +2,8 @@ pipeline {
     //agent any
     agent {
         docker {
-            //image "mariadb:12.3"
-			image "my_mariadb"
+            image "mariadb:12.3"
+			//image "my_mariadb"
         }
     }
   environment{
@@ -25,7 +25,7 @@ pipeline {
 	stage('init db') {
             steps {	
 			     sh 'mariadb --version'
-				 sh 'mariadb -u root -p root < init-db.sql'
+				 sh 'mariadb -u root  < init-db.sql'
 			}
         }
 	//stage('build_docker_image') {

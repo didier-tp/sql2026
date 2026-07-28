@@ -25,7 +25,7 @@ pipeline {
 		}
 		stage('Start Database') {
 			steps {
-				sh 'sudo systemctl start mysql || sudo service mysql start'
+				sh 'systemctl start mysql || service mysql start'
 			}
 		}
 	stage('init db') {

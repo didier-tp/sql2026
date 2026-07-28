@@ -41,7 +41,7 @@ pipeline {
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < zinit-db.sql'
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < insert-db.sql'
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
-				 sh 'cat zinit-db.sql insert-db.sql > all-sql.sql'  
+				 sh 'cat zinit-db.sql insert-db.sql > all.sql'  
 			}
 		}
 	stage('build_docker_image') {

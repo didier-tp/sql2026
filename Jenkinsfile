@@ -39,6 +39,7 @@ pipeline {
                     done
                 '''
 		}
+	}
 	stage('init db') {
             steps {	
 			     sh 'mariadb --version'

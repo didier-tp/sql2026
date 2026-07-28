@@ -1,17 +1,19 @@
 pipeline {
-    //agent any
-    agent {
-        docker {
-            image "mariadb:12.3"
-			//args '-p 3306:3306  --env MARIADB_ROOT_PASSWORD=root'
-			//image "my_mariadb"
-        }
-    }
   environment{
+    NETWORK_NAME='tp-net'
+	DB_PASSWORD = '1234'
+	DB_CONTAINER = 'mariadb-server'
 	dockerhub_credential_id='credential_dockerhub_didierdefrance69'
 	docker_registry= 'https://registry.hub.docker.com'
 	docker_image_name='didierdefrance69/geodb:1'
   }
+  //agent any
+    agent {
+        docker {
+            image "mariadb:12.3"
+			args "--network $NETWORK_NAME"
+        }
+    }
     stages {
         //stage('from_git') {
         //    steps {
@@ -23,16 +25,24 @@ pipeline {
                 sh 'ls *.sql'
             }
 		}
-		stage('Start Database Server') {
-			steps {
-			    sh 'mariadbd --initialize-insecure'
-				sh 'service mariadb start'
-			}
+		stage('Start MariaDB Database Server in another container') {
+			agent any
+            steps {
+                sh 'docker network create $NETWORK_NAME || true'
+                sh 'docker rm -f $DB_CONTAINER || true'
+                sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:11'
+                sh '''
+                    for i in $(seq 1 15); do
+                        docker exec $DB_CONTAINER mariadb-admin ping -uroot -p$DB_PASSWORD --silent && break
+                        echo "En attente de MariaDB..."
+                        sleep 2
+                    done
+                '''
 		}
 	stage('init db') {
             steps {	
 			     sh 'mariadb --version'
-				 sh 'mariadb -u root < init-db.sql'
+				 sh 'mariadb  h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
 			}
         }
 	//stage('build_docker_image') {

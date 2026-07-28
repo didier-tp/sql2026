@@ -45,8 +45,8 @@ pipeline {
 			steps {	
 			     sh 'mariadb --version'
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
-				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < insert-db.sql'
-				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
+				 //sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < insert-db.sql'
+				 //sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
 			}
 		}
 	//stage('build_docker_image') {

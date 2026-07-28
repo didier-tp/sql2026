@@ -27,7 +27,7 @@ pipeline {
                 sh 'docker rm -f $DB_CONTAINER || true'
                 sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:12.3'
                 sh '''
-                    for i in $(seq 1 15); do
+                    for i in $(seq 1 18); do
                         docker exec $DB_CONTAINER mariadb-admin ping -uroot -p$DB_PASSWORD --silent && break
                         echo "En attente de MariaDB..."
                         sleep 2

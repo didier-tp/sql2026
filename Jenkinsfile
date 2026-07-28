@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image "mariadb:12.3"
-			args '-p 3306:3306  --env MARIADB_ROOT_PASSWORD=root'
+			//args '-p 3306:3306  --env MARIADB_ROOT_PASSWORD=root'
 			//image "my_mariadb"
         }
     }
@@ -22,6 +22,11 @@ pipeline {
             steps {
                 sh 'ls *.sql'
             }
+		}
+		stage('Start Database') {
+			steps {
+				sh 'sudo systemctl start mysql || sudo service mysql start'
+			}
 		}
 	stage('init db') {
             steps {	

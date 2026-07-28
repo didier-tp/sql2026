@@ -25,13 +25,14 @@ pipeline {
 		}
 		stage('Start Database Server') {
 			steps {
+			    sh 'mysqld --initialize-insecure'
 				sh 'service mariadb start'
 			}
 		}
 	stage('init db') {
             steps {	
 			     sh 'mariadb --version'
-				 sh 'mariadb -u root -proot  < init-db.sql'
+				 sh 'mariadb -u root < init-db.sql'
 			}
         }
 	//stage('build_docker_image') {

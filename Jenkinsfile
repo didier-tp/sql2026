@@ -56,7 +56,7 @@ pipeline {
 			    sh 'echo publish image in dockerhub'
 				//docker.withRegistry( docker_registry, dockerhub_credential_id ) {
 					//dockerImage.push()
-				}
+				//}
 			}
 		}
 	}

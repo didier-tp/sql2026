@@ -35,29 +35,20 @@ pipeline {
                 '''
 		}
 	}
-	stage('with_mariadb_client') {
+	stage('init-db and insert and select') {
 	      agent {
 				docker {
 				image "mariadb:12.3"
 				args "--network $NETWORK_NAME"
 				}
 			}
-			stages {
-			  stage('init-db') {
-				steps {	
+			steps {	
 			     sh 'mariadb --version'
 				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
-				}
-			  }
-			  stage('insert data') {
-				steps {	
-			     sh 'mariadb --version'
-				 //sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < init-db.sql'
-				}
-			  }
+				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < insert-db.sql'
+				 sh 'mariadb  -h $DB_CONTAINER -uroot -p$DB_PASSWORD < select-db.sql'
 			}
-        }
-	
+		}
 	//stage('build_docker_image') {
 	//	steps {
 	//		script{

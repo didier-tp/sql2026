@@ -25,7 +25,7 @@ pipeline {
 		}
 		stage('Start Database Server') {
 			steps {
-			    sh 'mysqld --initialize-insecure'
+			    sh 'mariadbd --initialize-insecure'
 				sh 'service mariadb start'
 			}
 		}

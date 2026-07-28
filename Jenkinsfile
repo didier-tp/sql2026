@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh 'docker network create $NETWORK_NAME || true'
                 sh 'docker rm -f $DB_CONTAINER || true'
-                sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:11'
+                sh 'docker run -d --name $DB_CONTAINER --network $NETWORK_NAME -e MARIADB_ROOT_PASSWORD=$DB_PASSWORD mariadb:12.3'
                 sh '''
                     for i in $(seq 1 15); do
                         docker exec $DB_CONTAINER mariadb-admin ping -uroot -p$DB_PASSWORD --silent && break

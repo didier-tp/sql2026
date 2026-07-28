@@ -3,6 +3,7 @@ pipeline {
     agent {
         docker {
             image "mariadb:12.3"
+			args '-p 3306:3306  --env MARIADB_ROOT_PASSWORD=root'
 			//image "my_mariadb"
         }
     }
@@ -25,7 +26,7 @@ pipeline {
 	stage('init db') {
             steps {	
 			     sh 'mariadb --version'
-				 sh 'mariadb -u root  < init-db.sql'
+				 sh 'mariadb -u root -proot  < init-db.sql'
 			}
         }
 	//stage('build_docker_image') {
